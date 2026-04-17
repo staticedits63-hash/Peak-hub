@@ -280,3 +280,260 @@ window.onload=()=>{
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Peak Hub</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: black;
+  color: white;
+}
+
+/* 🌌 Galaxy /
+body::before {
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:url('https://wallpaperaccess.com/full/1465233.jpg') center/cover;
+  filter:brightness(0.4);
+  z-index:-1;
+}
+
+/ Lock + Profile /
+.screen {
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:999;
+}
+
+input, button {
+  padding:10px;
+  margin:5px;
+}
+
+button {
+  background:purple;
+  border:none;
+  color:white;
+  cursor:pointer;
+}
+
+/ Top /
+#topbar {
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+}
+
+/ Rows /
+.row { margin:20px; }
+
+.scroll {
+  display:flex;
+  overflow-x:auto;
+  gap:12px;
+}
+
+.card {
+  min-width:180px;
+  transition:0.3s;
+  cursor:pointer;
+}
+
+.card img {
+  width:100%;
+  border-radius:10px;
+}
+
+.card:hover { transform:scale(1.1); }
+
+/ Popup /
+#popup {
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+iframe { width:80%; height:60%; }
+
+.close {
+  position:absolute;
+  top:20px;
+  right:30px;
+  font-size:30px;
+  cursor:pointer;
+}
+
+/ Search */
+#search {
+  width:60%;
+  padding:10px;
+  display:block;
+  margin:10px auto;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔐 Lock -->
+<div id="lock" class="screen">
+  <h1>Enter Passcode</h1>
+  <input type="password" id="code">
+  <button onclick="unlock()">Enter</button>
+</div>
+
+<!-- 👤 Profiles -->
+<div id="profiles" class="screen">
+  <h1>Who's Watching?</h1>
+  <button onclick="enter()">Player</button>
+  <button onclick="enter()">Guest</button>
+</div>
+
+<!-- Top -->
+<div id="topbar">
+  <button onclick="schoolMode()">📚 School Mode</button>
+  <button onclick="toggleMusic()">🎧 Music</button>
+</div>
+
+<h1 style="text-align:center;">🌌 Peak Hub</h1>
+
+<input id="search" placeholder="Search..." onkeyup="search()">
+
+<!-- 🎬 Movies -->
+<div class="row">
+  <h2>🔥 Movies</h2>
+  <div class="scroll">
+
+    <div class="card" data-name="spiderman" onclick="play('t06RUxPbp_c')">
+      <img src="https://image.tmdb.org/t/p/w500/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg">
+    </div>
+
+    <div class="card" data-name="avengers" onclick="play('EXeTwQWrcwY')">
+      <img src="https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg">
+    </div>
+
+    <div class="card" data-name="jumanji" onclick="play('2g811Eo7K8U')">
+      <img src="https://image.tmdb.org/t/p/w500/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg">
+    </div>
+
+  </div>
+</div>
+
+<!-- 📺 Shows -->
+<div class="row">
+  <h2>📺 Shows</h2>
+  <div class="scroll">
+
+    <div class="card" data-name="euphoria" onclick="play('UR4Pxgnm-GA')">
+      <img src="https://image.tmdb.org/t/p/w500/3NTAbAiao4JLzFQw6YxP1YZppM8.jpg">
+    </div>
+
+    <div class="card" data-name="daredevil" onclick="play('sXrU1Zx7QkM')">
+      <img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg">
+    </div>
+
+  </div>
+</div>
+
+<!-- 🎮 Game -->
+<div class="row">
+  <h2>🎮 Game</h2>
+  <iframe src="https://www.crazygames.com/embed/slope"></iframe>
+</div>
+
+<!-- 🤖 AI -->
+<div class="row">
+  <h2>🤖 AI Homework</h2>
+  <div id="chat"></div>
+  <input id="aiInput" placeholder="Ask...">
+  <button onclick="askAI()">Send</button>
+</div>
+
+<!-- 🎥 Popup -->
+<div id="popup">
+  <span class="close" onclick="closePlayer()">✖</span>
+  <iframe id="frame"></iframe>
+</div>
+
+<audio id="music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+<script>
+// Unlock
+function unlock(){
+  if(code.value==="1234"){
+    lock.style.display="none";
+  }
+}
+
+// Profile
+function enter(){
+  profiles.style.display="none";
+}
+
+// Play
+function play(id){
+  popup.style.display="flex";
+  frame.src="https://youtube.com/embed/"+id;
+  localStorage.setItem("last",id);
+}
+
+// Close
+function closePlayer(){
+  popup.style.display="none";
+  frame.src="";
+}
+
+// Search
+function search(){
+  let v=search.value.toLowerCase();
+  document.querySelectorAll(".card").forEach(c=>{
+    c.style.display=c.dataset.name.includes(v)?"block":"none";
+  });
+}
+
+// Music
+let playing=false;
+function toggleMusic(){
+  if(!playing){ music.play(); playing=true; }
+  else{ music.pause(); playing=false; }
+}
+
+// School mode
+function schoolMode(){
+  document.body.innerHTML="<h1 style='color:black'>Google Classroom</h1>";
+}
+
+// Continue
+window.onload=()=>{
+  let last=localStorage.getItem("last");
+  if(last) play(last);
+}
+
+// Fake AI (hook ready)
+function askAI(){
+  let input=aiInput.value;
+  chat.innerHTML += "<p>You: "+input+"</p>";
+  chat.innerHTML += "<p>AI: Working on it...</p>";
+  aiInput.value="";
+}
+</script>
+
+</body>
+</html>
